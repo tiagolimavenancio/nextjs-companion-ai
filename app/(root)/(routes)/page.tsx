@@ -1,12 +1,12 @@
 import React from "react";
-import { UserButton } from "@clerk/nextjs";
+import { SearchInput } from "@/components/search-input";
 
-function RootPage() {
+const RootPage = () => {
   return (
-    <div>
-      <UserButton />
+    <div className="h-full p-4 space-y-2">
+      <SearchInput />
     </div>
   );
-}
+};
 
 export default RootPage;
