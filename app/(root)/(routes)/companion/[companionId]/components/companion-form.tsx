@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import { Category, Companion } from "@prisma/client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -68,6 +72,8 @@ Elon: Always! But right now, I'm particularly excited about Neuralink. It has th
 `;
 
 export const CompanionForm = ({ initialData, categories }: CompanionFormProps) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
@@ -83,7 +89,22 @@ export const CompanionForm = ({ initialData, categories }: CompanionFormProps) =
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log({ values });
+    try {
+      if (initialData) {
+        // update companion functionality
+        await axios.patch(`/api/companion/${initialData.id}`, values);
+      } else {
+        // create companion functionality
+        await axios.post("/api/companion", values);
+      }
+
+      toast.success("Success");
+      router.refresh();
+      router.push("/");
+    } catch (error) {
+      console.log({ error });
+      toast.error("Something went wrong");
+    }
   };
 
   return (
@@ -101,14 +122,20 @@ export const CompanionForm = ({ initialData, categories }: CompanionFormProps) =
           </div>
           <FormField
             name="src"
-            render={({ field }) => (
-              <FormItem className="flex flex-col items-center justify-center space-y-4 col-span-2">
-                <FormControl>
-                  <ImageUpload disabled={isLoading} onChange={field.onChange} value={field.value} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              return (
+                <FormItem className="flex flex-col items-center justify-center space-y-4 col-span-2">
+                  <FormControl>
+                    <ImageUpload
+                      value={field.value}
+                      disabled={isLoading}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
