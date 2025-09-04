@@ -1,17 +1,23 @@
 import React from "react";
+import { auth } from "@clerk/nextjs/server";
 import prismadb from "@/lib/prismadb";
 import { CompanionForm } from "./components/companion-form";
 
-interface CompanionPageProps {
+interface CompanionIdPageProps {
   params: {
     companionId: string;
   };
 }
 
-const CompanionPage = async ({ params }: CompanionPageProps) => {
+const CompanionIdPage = async ({ params }: CompanionIdPageProps) => {
+  const { userId, redirectToSignIn } = await auth();
+
+  if (!userId) redirectToSignIn();
+
   const companion = await prismadb.companion.findUnique({
     where: {
       id: params.companionId,
+      userId,
     },
   });
 
@@ -20,4 +26,4 @@ const CompanionPage = async ({ params }: CompanionPageProps) => {
   return <CompanionForm initialData={companion} categories={categories} />;
 };
 
-export default CompanionPage;
+export default CompanionIdPage;

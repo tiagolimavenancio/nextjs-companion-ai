@@ -23,6 +23,7 @@ export async function PATCH(req: Request, { params }: { params: { companionId: s
     const companion = await prismadb.companion.update({
       where: {
         id: params.companionId,
+        userId: user.id,
       },
       data: {
         categoryId,
@@ -53,8 +54,8 @@ export async function DELETE(req: Request, { params }: { params: { companionId: 
 
     const companion = await prismadb.companion.delete({
       where: {
-        userId,
         id: params.companionId,
+        userId,
       },
     });
 
