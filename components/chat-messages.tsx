@@ -1,8 +1,7 @@
 "use client";
-
+import React, { ComponentRef, useEffect, useRef, useState } from "react";
 import { Companion } from "@prisma/client";
 import ChatMessage, { ChatMessageProps } from "@/components/chat-message";
-import { ComponentRef, useEffect, useRef, useState } from "react";
 
 interface ChatMessagesProps {
   isLoading: boolean;
@@ -10,8 +9,9 @@ interface ChatMessagesProps {
   messages: ChatMessageProps[];
 }
 
-const ChatMessages = ({ isLoading, companion, messages }: ChatMessagesProps) => {
+export default function ChatMessages({ companion, isLoading, messages }: ChatMessagesProps) {
   const scrollRef = useRef<ComponentRef<"div">>(null);
+
   const [fakeLoading, setFakeLoading] = useState(messages.length === 0 ? true : false);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const ChatMessages = ({ isLoading, companion, messages }: ChatMessagesProps) => 
   }, []);
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
 
   return (
@@ -41,13 +41,11 @@ const ChatMessages = ({ isLoading, companion, messages }: ChatMessagesProps) => 
           key={message.content}
           role={message.role}
           content={message.content}
-          src={message.src}
+          src={companion.src}
         />
       ))}
       {isLoading && <ChatMessage role="system" src={companion.src} isLoading />}
       <div ref={scrollRef} />
     </div>
   );
-};
-
-export { ChatMessages };
+}
