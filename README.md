@@ -15,13 +15,6 @@ A full-stack SaaS (Software as a Service) platform that lets users interact with
 
 ---
 
-## 📺 Tutorial & Code source
-
-- Video tutorial: *Build a SaaS: AI Companion With Next.js 13, React, Stripe …* by CodeWithAntonio. :contentReference[oaicite:0]{index=0}  
-- GitHub & live demo (if provided by author). :contentReference[oaicite:1]{index=1}  
-
----
-
 ## 🛠️ Tech Stack
 
 | Component | Tech / Library |
